@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Current Weather</title>
+  </head>
+  <body>
+    <h1>Current Weather</h1>
+    <p>@Eric Chen</p>
+    <h3>Input the city:</h3>
+    <input id="ipt" type="text" name="city" />
+    <button id="btn">Submit</button>
+    <p id="currentWeather">
+      <strong>Current City:</strong> N/A; <br />
+      <strong>Current Weather:</strong> N/A;
+    </p>
+    <button id="infobtn">Info Button</button>
+    <p id="info"></p>
+
+    <script>
+      document.getElementById("infobtn").onclick = function () {
+        document.getElementById("info").innerHTML =
+          "The Product Manager Accelerator Program is designed to support PM professionals through every stage of their career. From students looking for entry-level jobs to Directors looking to take on a leadership role, our program has helped over hundreds of students fulfill their career aspirations.<br>Our Product Manager Accelerator community are ambitious and committed. Through our program they have learnt, honed and developed new PM and leadership skills, giving them a strong foundation for their future endeavours.";
+      };
+      document.getElementById("btn").onclick = async function () {
+        let location = document.getElementById("ipt").value;
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=7127de3000ed7949e56e9b5b90da779e&units=metric`;
+
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          if (data.cod === 200) {
+            let res = `<strong>Current City:</strong> ${data.name};<br>`;
+            res = res + `<strong>Current Weather:</strong><br>`;
+            res = res + `---Temperature: ${data.main.temp}°C;<br>`;
+            res =
+              res +
+              `---Temperature Range: ${data.main.temp_min}-${data.main.temp_max}°C;<br>`;
+            res = res + `---Weather: ${data.weather[0].main};<br>`;
+            res = res + `---Wind Speed: ${data.wind.speed};<br>`;
+
+            console.log(data);
+            document.getElementById("currentWeather").innerHTML = res;
+          } else {
+            document.getElementById(
+              "currentWeather"
+            ).innerHTML = `<strong>Error: </strong>${data.message}`;
+          }
+        } catch (error) {
+          document.getElementById("currentWeather").innerHTML =
+            "Error occurred when searching";
+        }
+        document.getElementById("ipt").value = "";
+      };
+    </script>
+  </body>
+</html>
